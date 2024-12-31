@@ -3,7 +3,9 @@
 1. Kunjungi [halaman ini](https://r021n.github.io/sholat-detection/)
 2. Tunggu hingga tulisan 'loading' hilang
 3. Masukkan jumlah rakaat maksimal (opsional)
+
    ![rakaat_maksimal](/img/rakaat_maksimal.png)
+
 4. Klik 'ENABLE WEBCAM'
 5. Pastikan saat posisi berdiri (takbiratul ihram, i'tidal), titik merah/pink berada di area warna hijau
    ![posisi_berdiri](/img/posisi_berdiri.png)
