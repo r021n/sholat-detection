@@ -10,8 +10,12 @@ let poseLandmarker = undefined;
 let runningMode = "IMAGE";
 let enableWebcamButton;
 let webcamRunning = false;
+let rakaat = 1;
+let count = 0;
 const videoHeight = '100%';
 const videoWidth = '100%';
+const loading = document.querySelector('#loading');
+const rakaatCount = document.querySelector('#rakaat_count');
 
 // Before we can use PoseLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
@@ -29,6 +33,7 @@ const createPoseLandmarker = async () => {
         numPoses: 2
     });
     demosSection.classList.remove("invisible");
+    loading.style.display = 'none'
 };
 createPoseLandmarker();
 
@@ -42,6 +47,7 @@ const canvasElement = document.getElementById(
 );
 const canvasCtx = canvasElement.getContext("2d");
 const drawingUtils = new DrawingUtils(canvasCtx);
+const markingArea = document.querySelector('#green_screen')
 
 // Check if webcam access is supported.
 const hasGetUserMedia = () => !!navigator.mediaDevices?.getUserMedia;
@@ -61,6 +67,7 @@ function enableCam(event) {
         console.log("Wait! poseLandmaker not loaded yet.");
         return;
     }
+    markingArea.style.display = 'block'
 
     if (webcamRunning === true) {
         webcamRunning = false;
@@ -68,6 +75,8 @@ function enableCam(event) {
     } else {
         webcamRunning = true;
         enableWebcamButton.innerText = "DISABLE PREDICTIONS";
+        rakaatCount.style.display = 'block'
+        rakaatCount.textContent = `Rakaat ke: ${rakaat}`
     }
 
     // getUsermedia parameters.
@@ -97,8 +106,8 @@ async function predictWebcam() {
     if (lastVideoTime !== video.currentTime) {
         lastVideoTime = video.currentTime;
         poseLandmarker.detectForVideo(video, startTimeMs, (result) => {
-            const xPosition = result.landmarks[0][0].x;
-            const yPosition = result.landmarks[0][0].y;
+            const xPosition = (result.landmarks[0][0].x) * 297;
+            const yPosition = (result.landmarks[0][0].y) * 145;
             canvasCtx.save();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
             // for (const landmark of result.landmarks) {
@@ -109,21 +118,44 @@ async function predictWebcam() {
             // }
             canvasCtx.beginPath();
             // canvasCtx.arc(videoWidth - (xPosition * 100), videoHeight - (yPosition * 100), 50, 0, 2 * Math.PI);
-            canvasCtx.arc(297 * xPosition, 145 * yPosition, 7, 0, 2 * Math.PI);
+            canvasCtx.arc(xPosition, yPosition, 4, 0, 2 * Math.PI);
             // canvasCtx.stroke();
             canvasCtx.fillStyle = "pink";
             canvasCtx.fill();
+
+            canvasCtx.lineWidth = 1;
+            canvasCtx.strokeStyle = "red";
+            canvasCtx.moveTo(0, 90)
+            canvasCtx.lineTo(300, 90)
+            canvasCtx.stroke()
 
             // if (result.landmarks.length > 0) {
             //     drawingUtils.drawLandmarks(result.landmarks[0], {
             //         radius: (data) => DrawingUtils.lerp(data.from.z, -0.15, 0.1, 5, 1)
             //     });
             // }
-
             canvasCtx.restore();
-            console.log(canvasElement.height, canvasElement.width);
+
+            if (yPosition < 90) {
+                if (count === 1) {
+                    count = 0
+                    rakaat += 0.25
+                    // console.log(rakaat)
+                    rakaatCount.textContent = `Rakaat ke: ${parseInt(rakaat)}`
+                }
+            }
+            else if (yPosition > 90) {
+                if (count === 0) {
+                    count = 1
+                    rakaat += 0.25
+                }
+            }
+
+            // console.log(yPosition);
+            // console.log(rakaat);
         });
     }
+
 
     // Call this function again to keep predicting when the browser is ready.
     if (webcamRunning === true) {

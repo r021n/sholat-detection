@@ -15,20 +15,20 @@
 
 
 
-    <h1>Pose detection using the MediaPipe PoseLandmarker task</h1>
+    <h1>Hitung Rakaat Sholat</h1>
 
+    <h2 id="loading">Loading</h2>
+    <p id="rakaat_count"></p>
     <section id="demos" class="invisible">
-        <h2>Demo: Webcam continuous pose landmarks detection</h2>
-        <p>Stand in front of your webcam to get real-time pose landmarker detection.</br>Click <b>enable webcam</b>
-            below and grant access to the webcam if prompted.</p>
 
         <div id="liveView" class="videoView">
             <button id="webcamButton" class="mdc-button mdc-button--raised">
                 <span class="mdc-button__ripple"></span>
                 <span class="mdc-button__label">ENABLE WEBCAM</span>
             </button>
-            <div style="position: relative;">
+            <div style="position: relative; display: flex; flex-direction: column;">
                 <video id="webcam" autoplay playsinline></video>
+                <div id="green_screen"></div>
                 <canvas class="output_canvas" id="output_canvas"
                     style="position: absolute; left: 0px; top: 0px;"></canvas>
             </div>
