@@ -17,6 +17,7 @@ const videoHeight = '100%';
 const videoWidth = '100%';
 const loading = document.querySelector('#loading');
 const rakaatCount = document.querySelector('#rakaat_count');
+const maxRakaatElement = document.querySelector('#max_rakaat');
 
 // Before we can use PoseLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
@@ -82,12 +83,16 @@ function enableCam(event) {
 
     if (webcamRunning === true) {
         webcamRunning = false;
-        enableWebcamButton.innerText = "ENABLE PREDICTIONS";
+        // enableWebcamButton.innerText = "ENABLE PREDICTIONS";
+        location.reload();
     } else {
         webcamRunning = true;
-        enableWebcamButton.innerText = "DISABLE PREDICTIONS";
+        enableWebcamButton.innerText = "RELOAD";
         rakaatCount.style.display = 'block'
         rakaatCount.textContent = `Rakaat ke: ${rakaat}`
+        maxRakaatElement.style.display = 'block'
+        maxRakaatElement.textContent = `Rakaat maksimal: ${maxRakaat}`
+        userInput.style.display = 'none';
     }
 
     // getUsermedia parameters.
@@ -136,8 +141,8 @@ async function predictWebcam() {
 
             canvasCtx.lineWidth = 1;
             canvasCtx.strokeStyle = "red";
-            canvasCtx.moveTo(0, 90)
-            canvasCtx.lineTo(300, 90)
+            canvasCtx.moveTo(0, 75)
+            canvasCtx.lineTo(300, 75)
             canvasCtx.stroke()
 
             // if (result.landmarks.length > 0) {
@@ -147,7 +152,7 @@ async function predictWebcam() {
             // }
             canvasCtx.restore();
 
-            if (yPosition < 90) {
+            if (yPosition < 75) {
                 if (count === 1) {
                     count = 0
                     rakaat += 0.25
@@ -155,7 +160,7 @@ async function predictWebcam() {
                     rakaatCount.textContent = `Rakaat ke: ${parseInt(rakaat)}`
                 }
             }
-            else if (yPosition > 90) {
+            else if (yPosition > 75) {
                 if (count === 0) {
                     count = 1
                     rakaat += 0.25
