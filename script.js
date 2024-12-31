@@ -122,8 +122,13 @@ async function predictWebcam() {
     if (lastVideoTime !== video.currentTime) {
         lastVideoTime = video.currentTime;
         poseLandmarker.detectForVideo(video, startTimeMs, (result) => {
-            const xPosition = (result.landmarks[0][0].x) * 297;
-            const yPosition = (result.landmarks[0][0].y) * 145;
+            let xPosition;
+            let yPosition;
+
+            if (result.landmarks[0]) {
+                xPosition = (result.landmarks[0][0].x) * 297
+                yPosition = (result.landmarks[0][0].y) * 145
+            }
             canvasCtx.save();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
             // for (const landmark of result.landmarks) {
