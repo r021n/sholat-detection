@@ -12,6 +12,7 @@ let enableWebcamButton;
 let webcamRunning = false;
 let rakaat = 1;
 let count = 0;
+let body = document.querySelector('body');
 const videoHeight = '100%';
 const videoWidth = '100%';
 const loading = document.querySelector('#loading');
@@ -48,6 +49,16 @@ const canvasElement = document.getElementById(
 const canvasCtx = canvasElement.getContext("2d");
 const drawingUtils = new DrawingUtils(canvasCtx);
 const markingArea = document.querySelector('#green_screen')
+let maxRakaat = '';
+
+// Ambil referensi ke elemen input
+const userInput = document.getElementById('userInput');
+
+// Tambahkan event listener untuk menangkap perubahan nilai input
+userInput.addEventListener('input', (event) => {
+    maxRakaat = event.target.value;
+    console.log('User value:', maxRakaat); // Cetak nilai variabel untuk verifikasi
+});
 
 // Check if webcam access is supported.
 const hasGetUserMedia = () => !!navigator.mediaDevices?.getUserMedia;
@@ -149,6 +160,10 @@ async function predictWebcam() {
                     count = 1
                     rakaat += 0.25
                 }
+            }
+
+            if (rakaat === parseInt(maxRakaat)) {
+                body.style.backgroundColor = 'red';
             }
 
             // console.log(yPosition);
