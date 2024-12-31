@@ -141,8 +141,8 @@ async function predictWebcam() {
 
             canvasCtx.lineWidth = 1;
             canvasCtx.strokeStyle = "red";
-            canvasCtx.moveTo(0, 75)
-            canvasCtx.lineTo(300, 75)
+            canvasCtx.moveTo(0, 60)
+            canvasCtx.lineTo(300, 60)
             canvasCtx.stroke()
 
             // if (result.landmarks.length > 0) {
@@ -152,7 +152,7 @@ async function predictWebcam() {
             // }
             canvasCtx.restore();
 
-            if (yPosition < 75) {
+            if (yPosition < 60) {
                 if (count === 1) {
                     count = 0
                     rakaat += 0.25
@@ -160,7 +160,7 @@ async function predictWebcam() {
                     rakaatCount.textContent = `Rakaat ke: ${parseInt(rakaat)}`
                 }
             }
-            else if (yPosition > 75) {
+            else if (yPosition > 60) {
                 if (count === 0) {
                     count = 1
                     rakaat += 0.25
@@ -168,6 +168,8 @@ async function predictWebcam() {
             }
 
             if (rakaat === parseInt(maxRakaat)) {
+                body.style.backgroundColor = 'coral';
+            } else if (rakaat >= Math.floor(parseInt(maxRakaat)) + 1) {
                 body.style.backgroundColor = 'red';
             }
 
